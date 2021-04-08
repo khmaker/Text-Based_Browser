@@ -23,7 +23,8 @@ def write_file(n):
     resp = requests.get(f'https://{n}')
     soup = BeautifulSoup(resp.text, 'html.parser')
     with open(f'{dir_name}/{name}.txt', 'w', encoding='utf-8') as file:
-        for string in soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'a', 'ul', 'ol', 'li']):
+        tags = ('p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'a', 'ul', 'ol', 'li')
+        for string in soup.find_all(tags):
             file.write(string.get_text())
             if string.name == 'a':
                 print(Fore.BLUE + string.get_text())
