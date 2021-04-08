@@ -1,5 +1,7 @@
 import os
-import argparse
+import sys
+from pathlib import Path
+from argparse import ArgumentParser
 import requests
 from bs4 import BeautifulSoup
 from colorama import Fore, init
@@ -7,12 +9,27 @@ from colorama import Fore, init
 init(autoreset=True)
 
 
+class Browser:
+    def __init__(self):
+        self.parse_directory_name()
+
+    @staticmethod
+    def parse_directory_name():
+        parser = ArgumentParser()
+        parser.add_argument('directory_name')
+        directory_name = parser.parse_args().directory_name
+        if directory_name is not None:
+            Path(directory_name).mkdir(exist_ok=True)
+        else:
+            print('No directory name was set')
+            sys.exit(0)
+
+
 def make_directory():
     global dir_name
-    parser = argparse.ArgumentParser()
+    parser = ArgumentParser()
     parser.add_argument('dir')
-    args = vars(parser.parse_args())
-    dir_name = args['dir']
+    dir_name = parser.parse_args().dir
     if not os.path.exists(dir_name):
         os.mkdir(dir_name)
 
@@ -25,11 +42,10 @@ def write_file(n):
     with open(f'{dir_name}/{name}.txt', 'w', encoding='utf-8') as file:
         tags = ('p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'a', 'ul', 'ol', 'li')
         for string in soup.find_all(tags):
-            file.write(string.get_text())
-            if string.name == 'a':
-                print(Fore.BLUE + string.get_text())
-            else:
-                print(string.get_text())
+            text = string.get_text()
+            file.write(text)
+            print(Fore.BLUE + text if string.name == 'a' else text)
+
     files.add(name)
     if current:
         history.append(current)
@@ -66,7 +82,6 @@ def call_back():
         with open(f'{dir_name}/{history.pop()}.txt', 'r', encoding='utf-8') as file:
             print(file.read())
         return call_url()
-    pass
 
 
 make_directory()
