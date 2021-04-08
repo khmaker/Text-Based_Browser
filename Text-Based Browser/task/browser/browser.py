@@ -73,9 +73,5 @@ files = set()
 history = []
 current = ''
 
-# write your code here
-call_url()
-
-
-
-
+if __name__ == '__main__':
+    call_url()
