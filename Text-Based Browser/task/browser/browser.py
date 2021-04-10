@@ -59,7 +59,8 @@ class Browser:
             print(e)
             return self.dispatcher()
 
-    def __exit(self, message=None):
+    @staticmethod
+    def __exit(message=None):
         print(message if message is not None else '')
         sys.exit(0)
 
