@@ -94,5 +94,4 @@ class Browser:
 
 
 if __name__ == '__main__':
-    # call_url()
     Browser()
